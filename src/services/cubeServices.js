@@ -4,6 +4,16 @@ const cubes = require('../db.json')
 
 exports.getOne = (cubeId) => cubes[cubeId]
 
+exports.getAll = (serach = '', fromInput, toInput) => {
+  const from = Number(fromInput) || 0
+  const to = Number(toInput) || 6
+  const result = cubes
+    .filter((x) => x.name.toLowerCase().includes(serach.toLowerCase()))
+    .filter((x) => x.difficultyLevel >= from && x.difficultyLevel <= to)
+
+  return result
+}
+
 exports.save = (cube) => {
   cubes.push({ id: cubes[cubes.length - 1].id + 1, ...cube })
 
