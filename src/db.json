@@ -23,5 +23,11 @@
         "name": "New Cub",
         "imageUrl": "https://images-na.ssl-images-amazon.com/images/I/61HpQqVQ37L._SY355_.jpg",
         "difficultyLevel": 13
+    },
+    {
+        "name": "Clasic Cubic",
+        "description": "Clasical",
+        "imageUrl": "https://c8.alamy.com/comp/2FNCYWN/classical-colorful-puzzle-cube-on-wooden-stump-2FNCYWN.jpg",
+        "difficultyLevel": "4"
     }
 ]

@@ -7,6 +7,7 @@ const PORT = 5000
 const app = express()
 
 app.use('/static', express.static('public'))
+app.use(express.urlencoded({ extended: false }))
 
 app.engine(
   'hbs',
