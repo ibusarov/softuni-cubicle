@@ -29,5 +29,11 @@
         "description": "Clasical",
         "imageUrl": "https://c8.alamy.com/comp/2FNCYWN/classical-colorful-puzzle-cube-on-wooden-stump-2FNCYWN.jpg",
         "difficultyLevel": "4"
+    },
+    {
+        "name": "Test",
+        "description": "Test",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/78/Runcinated_cubic_honeycomb.png",
+        "difficultyLevel": "6"
     }
 ]
