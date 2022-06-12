@@ -1,5 +1,6 @@
 const fs = require('fs/promises')
 const path = require('path')
+const Accessory = require('../models/Accessory')
 // const cubes = require('../db.json')
 
 const Cube = require('../models/Cube')
@@ -7,7 +8,6 @@ const Cube = require('../models/Cube')
 exports.getOne = (cubeId) => Cube.findById(cubeId)
 
 exports.getAll = async (serach = '', fromInput, toInput) => {
-
   let cubes = await Cube.find().lean()
 
   return cubes
@@ -18,8 +18,6 @@ exports.getAll = async (serach = '', fromInput, toInput) => {
   //   .filter((x) => x.difficultyLevel >= from && x.difficultyLevel <= to)
 
   // return result
-
-  
 }
 
 exports.create = (cube) => {
@@ -32,4 +30,17 @@ exports.create = (cube) => {
   // })
 
   return Cube.create(cube)
+}
+
+exports.attachAccessories = async (cubeId, accessoriesId) => {
+  const cube = await Cube.findById(cubeId)
+  const accessory = await Accessory.findById(accessoriesId)
+
+  cube.accessories.push(accessory)
+  accessory.cubes.push(cube)
+
+  await cube.save()
+  await accessory.save()
+
+  return cube
 }
