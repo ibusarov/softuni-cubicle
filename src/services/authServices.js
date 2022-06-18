@@ -1,6 +1,8 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const saltRounds = 10
+const secret = '123456'
 
 exports.register = async ({ username, password, repeatPassword }) => {
   //return form validaton message
@@ -15,4 +17,31 @@ exports.register = async ({ username, password, repeatPassword }) => {
   })
 
   return createdUser
+}
+
+exports.login = async ({ username, password }) => {
+  const user = await User.findOne({ username })
+
+  if (!user) {
+    //TODO: Add a message
+    return
+  }
+
+  const isValid = await bcrypt.compare(password, user.password)
+
+  if (!isValid) {
+    return
+  } 
+
+    const result = new Promise((resolve, reject) => {
+      jwt.sign({_id: user._id, username: user.username},secret,{expiresIn: '30d'}, (err, token)=>{
+        if(err){
+          reject(err)
+        }
+
+        resolve(token)
+      })
+    })
+
+    return result
 }

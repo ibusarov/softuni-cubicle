@@ -1,5 +1,5 @@
 const express = require('express')
-
+const cookieParser = require('cookie-parser')
 const { initializeDatabase } = require('./config/database')
 const routes = require('./routes')
 
@@ -9,7 +9,7 @@ const app = express()
 
 app.use('/static', express.static('public'))
 app.use(express.urlencoded({ extended: false }))
-
+app.use(cookieParser())
 require('./config/handlebars')(app)
 
 app.use(routes)
