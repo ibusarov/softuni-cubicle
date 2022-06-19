@@ -1,6 +1,7 @@
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const { initializeDatabase } = require('./config/database')
+const { auth } = require('./middlewares/authMiddleware')
 const routes = require('./routes')
 
 const PORT = 5000
@@ -11,7 +12,7 @@ app.use('/static', express.static('public'))
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 require('./config/handlebars')(app)
-
+app.use(auth)
 app.use(routes)
 
 initializeDatabase()

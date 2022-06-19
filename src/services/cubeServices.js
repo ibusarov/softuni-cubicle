@@ -6,6 +6,8 @@ const Accessory = require('../models/Accessory')
 const Cube = require('../models/Cube')
 
 exports.getOne = (cubeId) => Cube.findById(cubeId)
+exports.edit = (cubeId, cubeData) => Cube.findByIdAndUpdate(cubeId, cubeData)
+exports.delete = (cubeId) => Cube.findByIdAndDelete(cubeId)
 exports.getOneDetails = (cubeId) =>
   Cube.findById(cubeId).populate('accessories')
 

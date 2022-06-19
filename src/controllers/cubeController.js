@@ -1,13 +1,15 @@
 const router = require('express').Router()
 const cubeServices = require('../services/cubeServices')
 const accessoryService = require('../services/accessoryService')
+const { isAuth } = require('../middlewares/authMiddleware')
 
-router.get('/create', (req, res) => {
+router.get('/create', isAuth, (req, res) => {
   res.render('create')
 })
 
-router.post('/create', async (req, res) => {
+router.post('/create', isAuth, async (req, res) => {
   const cube = req.body
+  cube.owner = req.user._id
 
   //Validate
   if (cube.name.length < 2) {
@@ -26,8 +28,9 @@ router.post('/create', async (req, res) => {
 
 router.get('/details/:id', async (req, res) => {
   const cube = await cubeServices.getOneDetails(req.params.id).lean()
-  // console.log(cube);
-  res.render('details', { cube })
+  const isOwner = cube.owner == req.user?._id
+
+  res.render('details', { cube, isOwner })
 })
 
 router.get('/:cubeId/attach-accessory', async (req, res) => {
@@ -44,6 +47,42 @@ router.post('/:cubeId/attach-accessory', async (req, res) => {
   await cubeServices.attachAccessories(req.params.cubeId, accessoryId)
 
   res.redirect(`/cube/details/${req.params.cubeId}`)
+})
+
+router.get('/:cubeId/edit', isAuth, async (req, res) => {
+  const cube = await cubeServices.getOne(req.params.cubeId).lean()
+
+  //console.log(req.user) NB
+
+  if (cube.owner != req.user._id) {
+    return res.redirect('/404')
+  }
+
+  cube[`difficultyLevel${cube.difficultyLevel}`] = true
+
+  if (!cube) {
+    return res.redirect('/404')
+  }
+
+  res.render('cube/edit', { cube })
+})
+
+router.post('/:cubeId/edit', async (req, res) => {
+  let modifiedCube = await cubeServices.edit(req.params.cubeId, req.body)
+
+  res.redirect(`/cube/details/${modifiedCube._id}`)
+})
+
+router.get('/:cubeId/delete', async (req, res) => {
+  const cube = await cubeServices.getOne(req.params.cubeId).lean()
+  //TODO: is owner validation
+  res.render('cube/delete', { cube })
+})
+
+router.post('/:cubeId/delete', async (req, res) => {
+  await cubeServices.delete(req.params.cubeId)
+
+  res.redirect('/')
 })
 
 module.exports = router

@@ -1,8 +1,7 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const saltRounds = 10
-const secret = '123456'
+const { saltRounds, secret } = require('../constants')
 
 exports.register = async ({ username, password, repeatPassword }) => {
   //return form validaton message
@@ -31,17 +30,22 @@ exports.login = async ({ username, password }) => {
 
   if (!isValid) {
     return
-  } 
+  }
 
-    const result = new Promise((resolve, reject) => {
-      jwt.sign({_id: user._id, username: user.username},secret,{expiresIn: '30d'}, (err, token)=>{
-        if(err){
+  const result = new Promise((resolve, reject) => {
+    jwt.sign(
+      { _id: user._id, username: user.username },
+      secret,
+      { expiresIn: '30d' },
+      (err, token) => {
+        if (err) {
           reject(err)
         }
 
         resolve(token)
-      })
-    })
+      }
+    )
+  })
 
-    return result
+  return result
 }
